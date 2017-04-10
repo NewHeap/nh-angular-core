@@ -1,11 +1,22 @@
 {
-    "version": "1.6.2",
     "compilerOptions": {
         "module": "commonjs",
-        "declaration": true,
-        "outDir": "dist/",
-        "experimentalDecorators": true
+        "moduleResolution": "node",
+        "target": "es5",
+        "sourceMap": true,
+        "inlineSources": true,
+        "declaration": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true,
+        "outDir": "./dist/"
     },
+    "typeRoots": [
+        "./node_modules/@types"
+    ],
+    "types": [
+        "jasmine"
+    ],
     "files": [
         "./index.ts"
     ]
