@@ -1,7 +1,7 @@
 {
   "name": "@newheap/core",
   "scope": "@newheap",
-  "version": "0.0.2",
+  "version": "0.0.8",
   "description": "A small framework.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -37,8 +37,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "tsc:w": "tsc -w",
-    "bundle": "npm run clear && npm test && npm run ngc && npm run rollup && npm run rollup:min"
+    "tsc:w": "tsc -w"
   },
   "repository": {
     "type": "git",

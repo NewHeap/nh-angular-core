@@ -1,39 +1,67 @@
 import {Injectable} from "@angular/core";
-import {FormGroup, FormControl} from "@angular/forms";
+import {FormGroup, FormControl, AbstractControl} from "@angular/forms";
 
-export interface IServerSideFormValidator {
+export interface IServerSideFormValidationService{
 }
 
-export abstract class ServerSideFormValidator implements IServerSideFormValidator{
-    abstract validate(object: any): FormValidationResult;
+@Injectable()
+export class ServerSideFormValidationService implements IServerSideFormValidationService{
 
-    public static setErrorsOnFormGroup(formGroup: FormGroup, formValidationResult: FormValidationResult): void {
+    public validate<T extends IServerSideFormValidator>(formValidatorType: { new(): T ;}, formGroup: FormGroup, objectToValidate: any): void {
+
+        let formValidator = new formValidatorType();
+        let formValidationResult: FormValidationResult = formValidator.validate(objectToValidate);
+
         if(!formValidationResult.hasErrors())
         {
             return;
         }
 
-        for (let key in formGroup.controls) {
-            if (formGroup.controls.hasOwnProperty(key)) {
-                let control: FormControl = <FormControl>formGroup.controls[key];
-                let formError = formValidationResult.getErrorForFieldName(key);
-                if(formError != null)
-                {
-                    control.setErrors({remote: formError.getErrorMessages()});
+        let formErrors = formValidationResult.getErrors();
+        for(let i = 0; i < formErrors.length; i++)
+        {
+            let formError = formErrors[i];
+            let formControl: FormControl = null;
+
+            for (let key in formGroup.controls) {
+                if (formGroup.controls.hasOwnProperty(key)) {
+                    if(key == formError.getFieldName())
+                    {
+                        formControl = <FormControl>formGroup.controls[key];
+                        break;
+                    }
                 }
             }
+
+            if(formControl == null)
+            {
+                if(!formGroup.controls[""])
+                {
+                    formGroup.addControl("", new FormControl());
+                }
+
+                formControl = <FormControl>formGroup.controls[""];
+            }
+
+            formControl.setErrors({remote: formError.getErrorMessages()});
         }
     }
 }
 
-@Injectable()
-export class AspMvcFormServerSideFormValidator extends ServerSideFormValidator
+export interface IServerSideFormValidator {
+    validate(object: any): FormValidationResult;
+}
+export class AspMvcFormServerSideFormValidator implements IServerSideFormValidator
 {
     public validate(object: any): FormValidationResult {
         let validationResult = new FormValidationResult();
 
         if(object && object != null)
         {
+            if (object.error !== undefined) {
+                validationResult.addErrorByFieldName("", object.error);
+            }
+
             if (object.error_description !== undefined) {
                 validationResult.addErrorByFieldName("", object.error_description);
             }
@@ -63,12 +91,12 @@ export class FormValidationResult implements IFormValidationResult
 {
     private formErrors: Array<FormError> = [];
 
-    public getFormErrors(): Array<FormError>{
+    public getErrors(): Array<FormError>{
         return this.formErrors;
     }
 
     public hasErrors(): boolean{
-        return (this.getFormErrors().length > 0);
+        return (this.getErrors().length > 0);
     }
 
     public hasErrorForFieldName(fieldName: string): boolean{
@@ -95,6 +123,7 @@ export class FormValidationResult implements IFormValidationResult
         if(formError == null)
         {
             formError = new FormError(fieldName);
+            this.formErrors.push(formError);
         }
 
         formError.addErrorMessage(errorMessage);
