@@ -58,10 +58,6 @@ export class AspMvcFormServerSideFormValidator implements IServerSideFormValidat
 
         if(object && object != null)
         {
-            if (object.error !== undefined) {
-                validationResult.addErrorByFieldName("", object.error);
-            }
-
             if (object.error_description !== undefined) {
                 validationResult.addErrorByFieldName("", object.error_description);
             }
