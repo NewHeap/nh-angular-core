@@ -17,6 +17,11 @@ export class ServerSideFormValidationService implements IServerSideFormValidatio
             return;
         }
 
+        if(!formGroup.controls[""])
+        {
+            formGroup.addControl("", new FormControl());
+        }
+
         let formErrors = formValidationResult.getErrors();
         for(let i = 0; i < formErrors.length; i++)
         {
@@ -35,15 +40,23 @@ export class ServerSideFormValidationService implements IServerSideFormValidatio
 
             if(formControl == null)
             {
-                if(!formGroup.controls[""])
-                {
-                    formGroup.addControl("", new FormControl());
-                }
-
                 formControl = <FormControl>formGroup.controls[""];
             }
 
-            formControl.setErrors({remote: formError.getErrorMessages()});
+            if(!formControl.errors)
+            {
+                formControl.setErrors({remote: formError.getErrorMessages()});
+            }else{
+                if(!formControl.errors.remote || formControl.errors.remote.length < 1)
+                {
+                    formControl.errors.remote = [];
+                }
+
+                for(let formError of formError.getErrorMessages())
+                {
+                    formControl.errors.remote.push(formError);
+                }
+            }
         }
     }
 }
