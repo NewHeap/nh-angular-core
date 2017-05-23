@@ -17,6 +17,11 @@ export class ServerSideFormValidationService implements IServerSideFormValidatio
             return;
         }
 
+        if(!formGroup.controls[""])
+        {
+            formGroup.addControl("", new FormControl());
+        }
+
         let formErrors = formValidationResult.getErrors();
         for(let i = 0; i < formErrors.length; i++)
         {
