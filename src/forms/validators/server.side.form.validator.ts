@@ -17,11 +17,6 @@ export class ServerSideFormValidationService implements IServerSideFormValidatio
             return;
         }
 
-        if(!formGroup.controls[""])
-        {
-            formGroup.addControl("", new FormControl());
-        }
-
         let formErrors = formValidationResult.getErrors();
         for(let i = 0; i < formErrors.length; i++)
         {
@@ -52,9 +47,9 @@ export class ServerSideFormValidationService implements IServerSideFormValidatio
                     formControl.errors.remote = [];
                 }
 
-                for(let formError of formError.getErrorMessages())
+                for(let formErrorMessage of formError.getErrorMessages())
                 {
-                    formControl.errors.remote.push(formError);
+                    formControl.errors.remote.push(formErrorMessage);
                 }
             }
         }
@@ -80,7 +75,7 @@ export class AspMvcFormServerSideFormValidator implements IServerSideFormValidat
 
                     let errors = object.ModelState[key];
                     for (let subKey in errors) {
-                        validationResult.addErrorByFieldName(key, errors[subKey]);
+                        validationResult.addErrorByFieldName(key.replace("model.", ""), errors[subKey]);
                     }
                 }
             }
