@@ -85,6 +85,16 @@ export class AspMvcFormServerSideFormValidator implements IServerSideFormValidat
                 }
             }
 
+            if (object.error) {
+                for (let key in object.error) {
+
+                    let errors = object.error[key];
+                    for (let subKey in errors) {
+                        validationResult.addErrorByFieldName(key, errors[subKey]);
+                    }
+                }
+            }
+
             if (object.Message !== undefined) {
                 validationResult.addErrorByFieldName("", object.Message);
             }
