@@ -26,17 +26,7 @@ export class ServerSideFormValidationService implements IServerSideFormValidatio
         for(let i = 0; i < formErrors.length; i++)
         {
             let formError = formErrors[i];
-            let formControl: FormControl = null;
-
-            for (let key in formGroup.controls) {
-                if (formGroup.controls.hasOwnProperty(key)) {
-                    if(key == formError.getFieldName())
-                    {
-                        formControl = <FormControl>formGroup.controls[key];
-                        break;
-                    }
-                }
-            }
+            let formControl: FormControl = formValidator.getFormControlFromFormGroup(formGroup, formError.getFieldName());
 
             if(formControl == null)
             {
@@ -62,10 +52,47 @@ export class ServerSideFormValidationService implements IServerSideFormValidatio
 }
 
 export interface IServerSideFormValidator {
+    getFormControlFromFormGroup(formGroup: FormGroup, formControlKey: string) : FormControl;
     validate(object: any): FormValidationResult;
 }
 export class AspMvcFormServerSideFormValidator implements IServerSideFormValidator
 {
+    public getFormControlFromFormGroup(formGroup: FormGroup, formControlKey: string) : FormControl
+    {
+        const seperator = '.';
+        let formControl: FormControl = null;
+        const formControlKeySplit = formControlKey.split(seperator);
+
+        if(formControlKeySplit.length == 1)
+        {
+            for (let key in formGroup.controls) {
+                if (formGroup.controls.hasOwnProperty(key)) {
+                    if(key == formControlKey)
+                    {
+                        formControl = <FormControl>formGroup.controls[key];
+                        break;
+                    }
+                }
+            }
+        }else if(formControlKeySplit.length > 1)
+        {
+            const baseKey = formControlKeySplit[0];
+            const subKey = formControlKeySplit.filter(x => x !== baseKey).join(seperator);
+
+            if(typeof formGroup.controls[baseKey] === 'object')
+            {
+                formControl = this.getFormControlFromFormGroup(<FormGroup>formGroup.controls[baseKey], subKey);
+            }
+        }
+
+        if(formControl == null)
+        {
+            formControl = <FormControl>formGroup.controls[""];
+        }
+
+        return formControl
+    }
+
     public validate(object: any): FormValidationResult {
         let validationResult = new FormValidationResult();
 
