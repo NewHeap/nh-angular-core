@@ -67,7 +67,7 @@ export class AspMvcFormServerSideFormValidator implements IServerSideFormValidat
         {
             for (let key in formGroup.controls) {
                 if (formGroup.controls.hasOwnProperty(key)) {
-                    if(key == formControlKey)
+                    if(key.toLowerCase() == formControlKey.toLowerCase())
                     {
                         formControl = <FormControl>formGroup.controls[key];
                         break;
@@ -79,9 +79,18 @@ export class AspMvcFormServerSideFormValidator implements IServerSideFormValidat
             const baseKey = formControlKeySplit[0];
             const subKey = formControlKeySplit.filter(x => x !== baseKey).join(separator);
 
-            if(typeof formGroup.controls[baseKey] === 'object')
-            {
-                formControl = this.getFormControlFromFormGroup(<FormGroup>formGroup.controls[baseKey], subKey);
+            for (let key in formGroup.controls) {
+                if (formGroup.controls.hasOwnProperty(key)) {
+                    if(key.toLowerCase() == baseKey.toLowerCase())
+                    {
+                        if(typeof formGroup.controls[key] === 'object')
+                        {
+                            formControl = this.getFormControlFromFormGroup(<FormGroup>formGroup.controls[baseKey], subKey);
+                        }
+
+                        break;
+                    }
+                }
             }
         }
 
