@@ -59,9 +59,9 @@ export class AspMvcFormServerSideFormValidator implements IServerSideFormValidat
 {
     public getFormControlFromFormGroup(formGroup: FormGroup, formControlKey: string) : FormControl
     {
-        const seperator = '.';
+        const separator = '.';
         let formControl: FormControl = null;
-        const formControlKeySplit = formControlKey.split(seperator);
+        const formControlKeySplit = formControlKey.split(separator);
 
         if(formControlKeySplit.length == 1)
         {
@@ -77,7 +77,7 @@ export class AspMvcFormServerSideFormValidator implements IServerSideFormValidat
         }else if(formControlKeySplit.length > 1)
         {
             const baseKey = formControlKeySplit[0];
-            const subKey = formControlKeySplit.filter(x => x !== baseKey).join(seperator);
+            const subKey = formControlKeySplit.filter(x => x !== baseKey).join(separator);
 
             if(typeof formGroup.controls[baseKey] === 'object')
             {
