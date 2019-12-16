@@ -1,20 +1,20 @@
 {
   "name": "@newheap/core",
   "scope": "@newheap",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "A small framework.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "dependencies": {},
   "devDependencies": {
-    "@angular/common": "^4.0.1",
-    "@angular/compiler": "^4.0.1",
-    "@angular/core": "^4.0.1",
-    "@angular/forms": "^4.0.1",
-    "@angular/http": "^4.0.1",
-    "@angular/router": "^4.0.1",
-    "@angular/platform-browser": "^4.0.1",
-    "@angular/platform-browser-dynamic": "^4.0.1",
+    "@angular/common": "^7.0.0",
+    "@angular/compiler": "^7.0.0",
+    "@angular/core": "^7.0.0",
+    "@angular/forms": "^7.0.0",
+    "@angular/http": "^7.0.0",
+    "@angular/platform-browser": "^7.0.0",
+    "@angular/platform-browser-dynamic": "^7.0.0",
+    "@angular/router": "^7.0.0",
     "@types/jasmine": "2.5.47",
     "concurrently": "3.4.0",
     "core-js": "2.4.1",
@@ -26,13 +26,13 @@
     "reflect-metadata": "0.1.10",
     "rollup": "0.41.6",
     "rollup-plugin-uglify": "1.0.1",
-    "rxjs": "5.2.0",
+    "rxjs": "^6.5.3",
     "systemjs": "0.20.11",
-    "typescript": "2.2.2",
+    "typescript": "^3.1.3",
     "zone.js": "0.8.5"
   },
   "peerDependencies": {
-    "@angular/core": ">= 2.0.0 < 5"
+    "@angular/core": ">= 2.0.0 < 10"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
